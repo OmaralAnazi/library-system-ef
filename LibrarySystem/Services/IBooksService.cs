@@ -1,3 +1,4 @@
+using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
 using LibrarySystem.Repositories;
 
@@ -8,7 +9,7 @@ public interface IBooksService
     Task TestCreatingNewBook();
 }
 
-public class BooksService(IBooksRepository booksRepository) : IBooksService 
+public class BooksService(IDbUnitOfWork dbUnitOfWork, IBooksRepository booksRepository) : IBooksService 
 {
     public async Task TestCreatingNewBook()
     {
@@ -21,6 +22,7 @@ public class BooksService(IBooksRepository booksRepository) : IBooksService
         };
         
         await booksRepository.AddAsync(bookEntity);
-        
+
+        await dbUnitOfWork.SaveChangesAsync();
     }
 }

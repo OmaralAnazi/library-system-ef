@@ -27,7 +27,8 @@ if (!builder.Environment.IsProduction())
 builder.Services.AddDbContext<LibraryContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repositories
+// DB UoW and Repositories
+builder.Services.AddScoped<IDbUnitOfWork, DbUnitOfWork>();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 
 // Services
