@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,26 @@ namespace LibrarySystem.Repositories;
 public abstract class BaseRepository<TEntity>(LibraryContext context) : IRepository<TEntity> where TEntity : BaseEntity
 {
     private readonly DbSet<TEntity> _dbSet = context.Set<TEntity>();
-    
+
+    public async Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, List<Expression<Func<TEntity, object?>>>? includes = null, bool asTracking = false,
+        CancellationToken cancellationToken = default)
+    {
+        var query = asTracking ? _dbSet : _dbSet.AsNoTracking();
+
+        // Apply includes if provided
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query
+            .Where(predicate)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<TEntity>> GetAllAsync(bool asTracking = false, CancellationToken cancellationToken = default)
     {
         var query = asTracking ? _dbSet : _dbSet.AsNoTracking();
