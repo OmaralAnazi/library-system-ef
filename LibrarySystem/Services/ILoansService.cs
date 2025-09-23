@@ -53,35 +53,52 @@ public class LoansService(ILoansRepository loansRepository, IBooksRepository boo
         loanEntity.BookId = bookEntity.Id;
         loanEntity.MemberId = memberEntity.Id;
             
-        // TODO: add a check if the book is already token or not 
+        if (!await IsBookAvailable(bookEntity, ct))
+        {
+            throw ExceptionFactory.NotAcceptableActionException();
+        }
         
         await loansRepository.AddAsync(loanEntity, ct);
         await dbUnitOfWork.SaveChangesAsync(ct);
+        
+        // Workaround: set navs only for DTO mapping; in real projects reload with includes instead.
+        loanEntity.Book = bookEntity;
+        loanEntity.Member = memberEntity;
         
         return mapper.Map<LoansDto>(loanEntity);
     }
 
     public async Task<LoansDto> ReturnLoanAsync(string loanId, CancellationToken ct = default)
     {
-        // TODO: review and test it
-        
         var includes = new List<Expression<Func<LoansEntity, object?>>>
         {
             loan => loan.Book,
             loan => loan.Member,
         };
 
-        var entity = await loansRepository.FindOneAsync(loan => loan.Key == loanId, includes, false, ct)
+        var loan = await loansRepository.FindOneAsync(loan => loan.Key == loanId, includes, true, ct)
                      ?? throw ExceptionFactory.EntityNotFoundException();
 
-        if (entity.ReturnDate != null)
+        if (loan.ReturnDate != null)
         {
             throw ExceptionFactory.NotAcceptableActionException();
         } 
         
-        entity.ReturnDate = DateTime.UtcNow;
+        loan.ReturnDate = DateTime.UtcNow;
         await dbUnitOfWork.SaveChangesAsync(ct);
         
-        return mapper.Map<LoansDto>(entity);
+        return mapper.Map<LoansDto>(loan);
+    }
+
+    private async Task<bool> IsBookAvailable(BooksEntity book, CancellationToken ct = default)
+    {
+        var now = DateTime.UtcNow;
+
+        var activeLoan = await loansRepository.FindOneAsync(
+            l => l.BookId == book.Id && (l.ReturnDate == null || l.ReturnDate > now),
+            cancellationToken: ct
+        );
+
+        return activeLoan is null;
     }
 }
