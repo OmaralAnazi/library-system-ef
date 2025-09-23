@@ -1,10 +1,11 @@
+using LibrarySystem.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class BooksController : ControllerBase
+public class BooksController(IBooksService booksService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetBooks()
@@ -21,6 +22,7 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateBook()
     {
-        throw new NotImplementedException();
+        await booksService.TestCreatingNewBook();
+        return Ok();
     }
 }
