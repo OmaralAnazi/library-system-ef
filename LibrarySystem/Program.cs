@@ -37,6 +37,8 @@ builder.Services.AddScoped<ILoansRepository, LoansRepository>();
 
 // Services
 builder.Services.AddScoped<IBooksService, BooksService>();
+builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<ILoansService, LoansService>();
 
 // Mappers
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
