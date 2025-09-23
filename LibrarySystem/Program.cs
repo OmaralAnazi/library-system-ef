@@ -32,6 +32,8 @@ builder.Services.AddDbContext<LibraryContext>(options =>
 // DB UoW and Repositories
 builder.Services.AddScoped<IDbUnitOfWork, DbUnitOfWork>();
 builder.Services.AddScoped<IBooksRepository, BooksRepository>();
+builder.Services.AddScoped<IMembersRepository, MembersRepository>();
+builder.Services.AddScoped<ILoansRepository, LoansRepository>();
 
 // Services
 builder.Services.AddScoped<IBooksService, BooksService>();
