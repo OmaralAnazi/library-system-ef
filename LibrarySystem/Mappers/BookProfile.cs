@@ -2,7 +2,7 @@ using AutoMapper;
 using LibrarySystem.Data.Entities;
 using LibrarySystem.Data.Dtos;
 
-namespace LibrarySystem.Mapping;
+namespace LibrarySystem.Mappers;
 
 public class BookProfile : Profile
 {

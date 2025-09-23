@@ -1,5 +1,4 @@
 using LibrarySystem.Data;
-using LibrarySystem.Mapping;
 using LibrarySystem.Repositories;
 using LibrarySystem.Services;
 using Microsoft.EntityFrameworkCore;
@@ -38,8 +37,7 @@ builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 builder.Services.AddScoped<IBooksService, BooksService>();
 
 // Mappers
-builder.Services.AddAutoMapper(typeof(BookProfile).Assembly);
-
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 
