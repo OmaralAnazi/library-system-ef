@@ -1,6 +1,6 @@
 using LibrarySystem.Data.Dtos;
 using LibrarySystem.Data.Entities;
-using LibrarySystem.Repositories;
+using LibrarySystem.Data.Repositories;
 using LibrarySystem.Services;
 using Microsoft.AspNetCore.Mvc;
 

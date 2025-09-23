@@ -1,7 +1,7 @@
 using AutoMapper;
 using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
-using LibrarySystem.Repositories;
+using LibrarySystem.Data.Repositories;
 
 namespace LibrarySystem.Services;
 

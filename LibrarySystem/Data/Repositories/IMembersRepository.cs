@@ -1,7 +1,7 @@
 using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
 
-namespace LibrarySystem.Repositories;
+namespace LibrarySystem.Data.Repositories;
 
 public interface IMembersRepository : IRepository<MembersEntity>;
 

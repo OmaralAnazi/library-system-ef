@@ -3,7 +3,7 @@ using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibrarySystem.Repositories;
+namespace LibrarySystem.Data.Repositories;
 
 public abstract class BaseRepository<TEntity>(LibraryContext context) : IRepository<TEntity> where TEntity : BaseEntity
 {

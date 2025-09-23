@@ -1,5 +1,5 @@
 using LibrarySystem.Data;
-using LibrarySystem.Repositories;
+using LibrarySystem.Data.Repositories;
 using LibrarySystem.Services;
 using Microsoft.EntityFrameworkCore;
 

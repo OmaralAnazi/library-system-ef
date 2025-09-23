@@ -1,5 +1,5 @@
 using LibrarySystem.Data.Entities;
-using LibrarySystem.Repositories;
+using LibrarySystem.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using LibrarySystem.Services;
 
