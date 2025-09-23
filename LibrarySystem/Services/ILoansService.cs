@@ -9,7 +9,7 @@ namespace LibrarySystem.Services;
 
 public interface ILoansService : ICrudService<ILoansRepository, LoansEntity, LoansDto, CreateLoanRequestDto>
 {
-
+    Task<LoansDto> ReturnLoanAsync(string loanId, CancellationToken ct = default);
 }
 
 public class LoansService(ILoansRepository loansRepository, IBooksRepository booksRepository, IMembersRepository membersRepository, IDbUnitOfWork dbUnitOfWork, IMapper mapper) : 
@@ -58,5 +58,29 @@ public class LoansService(ILoansRepository loansRepository, IBooksRepository boo
         await dbUnitOfWork.SaveChangesAsync(ct);
         
         return mapper.Map<LoansDto>(loanEntity);
+    }
+
+    public async Task<LoansDto> ReturnLoanAsync(string loanId, CancellationToken ct = default)
+    {
+        // TODO: review and test it
+        
+        var includes = new List<Expression<Func<LoansEntity, object?>>>
+        {
+            loan => loan.Book,
+            loan => loan.Member,
+        };
+        
+        var entity = await loansRepository.FindOneAsync(loan => loan.Key == loanId, includes, false, ct)
+                     ?? throw new KeyNotFoundException();
+
+        if (entity.ReturnDate != null)
+        {
+            // TODO: throw an exception
+        } 
+        
+        entity.ReturnDate = DateTime.UtcNow;
+        await dbUnitOfWork.SaveChangesAsync();
+        
+        return mapper.Map<LoansDto>(entity);
     }
 }
