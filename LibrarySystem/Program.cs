@@ -1,7 +1,10 @@
 using LibrarySystem.Data;
+using LibrarySystem.Mapping;
 using LibrarySystem.Repositories;
 using LibrarySystem.Services;
 using Microsoft.EntityFrameworkCore;
+
+// TODO: clean up this file (refactor)
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +36,9 @@ builder.Services.AddScoped<IBooksRepository, BooksRepository>();
 
 // Services
 builder.Services.AddScoped<IBooksService, BooksService>();
+
+// Mappers
+builder.Services.AddAutoMapper(typeof(BookProfile).Assembly);
 
 
 var app = builder.Build();

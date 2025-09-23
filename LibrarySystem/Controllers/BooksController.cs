@@ -11,26 +11,26 @@ public class BooksController(IBooksService booksService) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetBooks(CancellationToken cancellationToken = default)
     {
-        return Ok(await booksService.GetAllBooksAsync(cancellationToken));
+        return Ok(await booksService.GetAllAsync(cancellationToken));
     }
     
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBookById(string id, CancellationToken cancellationToken = default)
     {
-        return Ok(await booksService.GetBookByIdAsync(id, cancellationToken));
+        return Ok(await booksService.GetByIdAsync(id, cancellationToken));
     }
     
     [HttpPost]
     public async Task<IActionResult> CreateBook(CreateBookRequestDto request, CancellationToken cancellationToken = default)
     {
-        var created = await booksService.CreateBookAsync(request, cancellationToken);
+        var created = await booksService.CreateAsync(request, cancellationToken);
         return CreatedAtAction(nameof(GetBookById), new { id = created.Id }, created);
     }
     
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(string id, CancellationToken cancellationToken = default)
     {
-        await booksService.DeleteBookByIdAsync(id, cancellationToken);
+        await booksService.DeleteByIdAsync(id, cancellationToken);
         return NoContent();
     }
 }

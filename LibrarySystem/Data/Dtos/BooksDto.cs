@@ -2,11 +2,11 @@ using LibrarySystem.Data.Entities;
 
 namespace LibrarySystem.Data.Dtos;
 
-public class BooksDto(BooksEntity entity) // TODO: change to mapper later
+public class BooksDto
 {
-    public string Id { get; set; } = entity.Key;
-    public string Isbn { get; set; } = entity.Isbn; 
-    public string Title { get; set; } = entity.Title;
-    public string Author { get; set; } = entity.Author;
-    public DateTime PublishedAt { get; set; } = entity.PublishedAt;
+    public string Id { get; set; }
+    public string Isbn { get; set; }
+    public string Title { get; set; }
+    public string Author { get; set; }
+    public DateTime PublishedAt { get; set; }
 }
