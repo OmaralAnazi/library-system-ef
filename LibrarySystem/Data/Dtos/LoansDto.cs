@@ -2,6 +2,7 @@ namespace LibrarySystem.Data.Dtos;
 
 public class LoansDto
 {
+    public string Id { get; set; }
     public BooksDto Book { get; set; }
     public MembersDto Member { get; set; }
     public DateTime LoanDate { get; set; }
