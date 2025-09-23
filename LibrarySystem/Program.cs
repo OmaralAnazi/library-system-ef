@@ -11,6 +11,8 @@ builder.Services
 
 var app = builder.Build();
 
+app.UseApiExceptionHandling();
+
 app.UseSwaggerIfDev()
     .UseApi();
 
