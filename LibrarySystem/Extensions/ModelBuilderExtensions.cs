@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using System.Text;
+using LibrarySystem.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibrarySystem.Extensions;
@@ -25,6 +27,24 @@ public static class ModelBuilderExtensions
 
             foreach (var index in entity.GetIndexes())
                 index.SetDatabaseName(ToSnakeCase(index.GetDatabaseName()));
+        }
+
+        return modelBuilder;
+    }
+
+    public static ModelBuilder ApplyGlobalSoftDeleteFilter(this ModelBuilder modelBuilder)
+    {
+        var entityTypes = modelBuilder.Model.GetEntityTypes()
+            .Where(t => typeof(BaseEntity).IsAssignableFrom(t.ClrType));
+        
+        foreach (var et in entityTypes)
+        {
+            var p = Expression.Parameter(et.ClrType, "e");
+            var body = Expression.Equal(
+                Expression.Property(p, nameof(BaseEntity.DeletedAt)),
+                Expression.Constant(null, typeof(DateTime?)));
+            var lambda = Expression.Lambda(body, p);
+            et.SetQueryFilter(lambda);
         }
 
         return modelBuilder;

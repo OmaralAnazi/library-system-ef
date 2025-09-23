@@ -12,6 +12,28 @@ public class LibraryContext(DbContextOptions<LibraryContext> options) : DbContex
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
         modelBuilder.ApplySnakeCaseConfiguration();
+        modelBuilder.ApplyGlobalSoftDeleteFilter();
+    }
+    
+    public override Task<int> SaveChangesAsync(CancellationToken ct = default)
+    {
+        var now = DateTime.UtcNow;
+
+        foreach (var e in ChangeTracker.Entries<BaseEntity>())
+        {
+            if (e.State == EntityState.Added)
+                e.Entity.CreatedAt = now;
+
+            if (e.State == EntityState.Modified)
+                e.Entity.UpdatedAt = now;
+
+            if (e.Entity.DeletedAt is not null)
+                e.State = EntityState.Modified; // soft-delete stays an UPDATE
+        }
+        
+        return base.SaveChangesAsync(ct);
     }
 }
