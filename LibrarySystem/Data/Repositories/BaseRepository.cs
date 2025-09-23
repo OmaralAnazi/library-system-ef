@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
-using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
+using LibrarySystem.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibrarySystem.Data.Repositories;
@@ -80,14 +80,14 @@ public abstract class BaseRepository<TEntity>(LibraryContext context) : IReposit
 
     public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        var entity = await GetByIdAsync(id, true, cancellationToken) ?? throw new KeyNotFoundException();
+        var entity = await GetByIdAsync(id, true, cancellationToken) ?? throw ExceptionFactory.EntityNotFoundException();
         entity.DeletedAt = DateTime.UtcNow;
         _dbSet.Update(entity);
     }
 
     public async Task DeleteAsync(string id, CancellationToken cancellationToken = default)
     {
-        var entity = await GetByIdAsync(id, true, cancellationToken) ?? throw new KeyNotFoundException();
+        var entity = await GetByIdAsync(id, true, cancellationToken) ?? throw ExceptionFactory.EntityNotFoundException();
         entity.DeletedAt = DateTime.UtcNow;
         _dbSet.Update(entity);
     }

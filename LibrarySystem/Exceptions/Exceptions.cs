@@ -15,15 +15,15 @@ public class ApiException(
     public string ErrorCode { get; set; } = errorCode;
 }
 
-public static class Exceptions
+public static class ExceptionFactory
 {
-    public static ApiException BadRequest()
+    public static ApiException BadRequestException()
         => new("Bad request", "طلب غير صالح", HttpStatusCode.BadRequest, "E0001");
 
-    public static ApiException EntityNotFound()
+    public static ApiException EntityNotFoundException()
         => new("Entity not found", "العنصر غير متوفر", HttpStatusCode.NotFound, "E0002");
 
-    public static ApiException NotAcceptableAction()
+    public static ApiException NotAcceptableActionException()
         => new("Not acceptable action or request", "عملية أو طلب غير مقبولين", HttpStatusCode.NotAcceptable, "E0003");
 }
 

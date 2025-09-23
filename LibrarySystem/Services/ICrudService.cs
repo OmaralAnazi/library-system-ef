@@ -2,6 +2,7 @@ using AutoMapper;
 using LibrarySystem.Data;
 using LibrarySystem.Data.Entities;
 using LibrarySystem.Data.Repositories;
+using LibrarySystem.Exceptions;
 
 namespace LibrarySystem.Services;
 
@@ -35,8 +36,7 @@ public abstract class CrudService<TRepository, TEntity, TResponseDto, TCreateDto
 
     public virtual async Task<TResponseDto> GetByIdAsync(string id, CancellationToken ct = default)
     {
-        var entity = await _repo.GetByIdAsync(id, false, ct)
-                    ?? throw new KeyNotFoundException($"Entity '{typeof(TEntity).Name}' with key '{id}' not found.");
+        var entity = await _repo.GetByIdAsync(id, false, ct) ?? throw ExceptionFactory.EntityNotFoundException();
         return _mapper.Map<TResponseDto>(entity);
     }
 

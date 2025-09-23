@@ -4,6 +4,7 @@ using LibrarySystem.Data;
 using LibrarySystem.Data.Dtos;
 using LibrarySystem.Data.Entities;
 using LibrarySystem.Data.Repositories;
+using LibrarySystem.Exceptions;
 
 namespace LibrarySystem.Services;
 
@@ -35,9 +36,9 @@ public class LoansService(ILoansRepository loansRepository, IBooksRepository boo
             loan => loan.Book,
             loan => loan.Member,
         };
-        
-        var entity = await loansRepository.FindOneAsync(loan => loan.Key == id, includes, false, ct)
-                     ?? throw new KeyNotFoundException();
+
+        var entity = await loansRepository.FindOneAsync(loan => loan.Key == id, includes, false, ct) ??
+                     throw ExceptionFactory.EntityNotFoundException();
         
         return mapper.Map<LoansDto>(entity);
     }
@@ -45,9 +46,9 @@ public class LoansService(ILoansRepository loansRepository, IBooksRepository boo
     public override async Task<LoansDto> CreateAsync(CreateLoanRequestDto request, CancellationToken ct = default)
     {
         var loanEntity = mapper.Map<LoansEntity>(request);
-        
-        var bookEntity = await booksRepository.GetByIdAsync(request.BookId, false, ct) ?? throw new KeyNotFoundException();
-        var memberEntity = await membersRepository.GetByIdAsync(request.MemberId, false, ct) ?? throw new KeyNotFoundException();
+
+        var bookEntity = await booksRepository.GetByIdAsync(request.BookId, false, ct) ?? throw ExceptionFactory.EntityNotFoundException();
+        var memberEntity = await membersRepository.GetByIdAsync(request.MemberId, false, ct) ?? throw ExceptionFactory.EntityNotFoundException();
 
         loanEntity.BookId = bookEntity.Id;
         loanEntity.MemberId = memberEntity.Id;
@@ -69,17 +70,17 @@ public class LoansService(ILoansRepository loansRepository, IBooksRepository boo
             loan => loan.Book,
             loan => loan.Member,
         };
-        
+
         var entity = await loansRepository.FindOneAsync(loan => loan.Key == loanId, includes, false, ct)
-                     ?? throw new KeyNotFoundException();
+                     ?? throw ExceptionFactory.EntityNotFoundException();
 
         if (entity.ReturnDate != null)
         {
-            // TODO: throw an exception
+            throw ExceptionFactory.NotAcceptableActionException();
         } 
         
         entity.ReturnDate = DateTime.UtcNow;
-        await dbUnitOfWork.SaveChangesAsync();
+        await dbUnitOfWork.SaveChangesAsync(ct);
         
         return mapper.Map<LoansDto>(entity);
     }
