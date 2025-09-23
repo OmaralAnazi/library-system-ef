@@ -12,25 +12,21 @@ public abstract class BaseRepository<TEntity>(LibraryContext context) : IReposit
     {
         var query = asTracking ? _dbSet : _dbSet.AsNoTracking();
         
-        return await query
-            .Where(e => e.DeletedAt == null)
-            .ToListAsync(cancellationToken);
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task<TEntity?> GetByIdAsync(int id, bool asTracking = false, CancellationToken cancellationToken = default)
     {
         var query = asTracking ? _dbSet : _dbSet.AsNoTracking();
 
-        return await query
-            .FirstOrDefaultAsync(e => e.Id == id && e.DeletedAt == null, cancellationToken);
+        return await query.FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
     }
 
     public async Task<TEntity?> GetByIdAsync(string id, bool asTracking = false, CancellationToken cancellationToken = default)
     {
         var query = asTracking ? _dbSet : _dbSet.AsNoTracking();
 
-        return await query
-            .FirstOrDefaultAsync(e => e.Key == id && e.DeletedAt == null, cancellationToken);
+        return await query.FirstOrDefaultAsync(e => e.Key == id, cancellationToken);
     }
 
     public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
