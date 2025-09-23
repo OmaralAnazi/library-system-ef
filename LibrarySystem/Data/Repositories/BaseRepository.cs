@@ -28,6 +28,25 @@ public abstract class BaseRepository<TEntity>(LibraryContext context) : IReposit
             .ToListAsync(cancellationToken);
     }
 
+    public async Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate, List<Expression<Func<TEntity, object?>>>? includes = null, bool asTracking = false,
+        CancellationToken cancellationToken = default)
+    {
+        var query = asTracking ? _dbSet : _dbSet.AsNoTracking();
+
+        // Apply includes if provided
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+
+        return await query
+            .Where(predicate)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
     public async Task<IEnumerable<TEntity>> GetAllAsync(bool asTracking = false, CancellationToken cancellationToken = default)
     {
         var query = asTracking ? _dbSet : _dbSet.AsNoTracking();

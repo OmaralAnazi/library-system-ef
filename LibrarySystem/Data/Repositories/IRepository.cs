@@ -6,7 +6,8 @@ namespace LibrarySystem.Repositories;
 public interface IRepository<TEntity> where TEntity : BaseEntity
 {
     Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, List<Expression<Func<TEntity, object?>>>? includes = null, bool asTracking = false, CancellationToken cancellationToken = default);
-        
+    Task<TEntity?> FindOneAsync(Expression<Func<TEntity, bool>> predicate, List<Expression<Func<TEntity, object?>>>? includes = null, bool asTracking = false, CancellationToken cancellationToken = default);
+
     Task<IEnumerable<TEntity>> GetAllAsync(bool asTracking = false, CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(int id, bool asTracking = false, CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(string id, bool asTracking = false, CancellationToken cancellationToken = default);
