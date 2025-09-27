@@ -6,6 +6,7 @@ builder.Services
     .AddApi()
     .AddSwaggerIfDev(builder.Environment)
     .AddPersistence(builder.Configuration)
+    .AddFluentValidators()
     .AddApplication()
     .AddMappings();
 

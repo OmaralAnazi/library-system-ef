@@ -1,9 +1,10 @@
-using AutoMapper;
+using FluentValidation;
 using LibrarySystem.Data;
 using LibrarySystem.Data.Repositories;
+using LibrarySystem.Data.Validators;
+using LibrarySystem.Middlewares;
 using LibrarySystem.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Routing;
 
 namespace LibrarySystem.Extensions;
 
@@ -56,6 +57,17 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMappings(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(Program).Assembly);
+        return services;
+    }
+
+    public static IServiceCollection AddFluentValidators(this IServiceCollection services)
+    {
+        services.AddControllers(o =>
+        {
+            o.Filters.Add<FluentValidationActionFilter>(); // global
+        });
+        services.AddValidatorsFromAssemblyContaining<CreateBookRequestDtoValidator>();
+
         return services;
     }
 }
