@@ -17,4 +17,6 @@ app.UseApiExceptionHandling();
 app.UseSwaggerIfDev()
     .UseApi();
 
+app.InitializeDatabase();
+
 app.Run();

@@ -1,3 +1,6 @@
+using LibrarySystem.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace LibrarySystem.Extensions;
 
 public static class WebApplicationExtensions
@@ -15,6 +18,22 @@ public static class WebApplicationExtensions
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+        return app;
+    }
+    
+    public static WebApplication InitializeDatabase(this WebApplication app)
+    {
+        using var serviceScope = app.Services.GetService<IServiceScopeFactory>()!.CreateScope();
+        var context = serviceScope.ServiceProvider.GetRequiredService<LibraryContext>();
+        
+        if (!context.Database.GetAppliedMigrations().Any())
+            context.Database.Migrate();
+        
+        if (context.Database.GetPendingMigrations().Any())
+            context.Database.Migrate();
+        
+        context.Database.EnsureCreated();
+
         return app;
     }
 }
